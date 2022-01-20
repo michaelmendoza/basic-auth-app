@@ -1,0 +1,68 @@
+<div>
+    <script>
+        const getJWT = () => {
+            const jwt = window.localStorage.getItem("jwt");
+            console.log('Getting JWT', jwt);
+            return jwt;
+        }
+
+        const setJWT = (_jwt) => {
+            console.log('Setting JWT', _jwt);
+            window.localStorage.setItem("jwt", _jwt);
+        }
+
+        const clearJWT = () => {
+            window.localStorage.removeItem("jwt");
+        }
+
+        const setResponseText = (json) => {
+            var jsonPretty = JSON.stringify(json, null, 2); 
+            document.getElementById("api_response").innerHTML = jsonPretty;
+        }
+
+        const getOptions = (method, body) => {
+            const options = { 
+                method,  
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8',
+                'x-access-token': getJWT()
+                }
+            }
+
+            if (method == 'POST') {
+                options.body =  JSON.stringify(JSON.parse(body));
+            }
+
+            return options;
+        }
+
+        const useAPI = () => {
+            const route = document.getElementById("api_route").value;
+            const method = document.getElementById("api_method").value;
+            const body = document.getElementById("api_request_body").value;
+
+            const url = 'http://localhost:3011/' + route;
+            const req = fetch(url, getOptions(method, body))
+                .then(res => { setJWT(res.headers.get('x-access-token')); return res; })
+                .then(res => { return res.json() })
+                .then(data => { console.log(data); setResponseText(data); })
+                .catch((error) => { console.log('Fetch Error: ' + error); });
+        }
+    </script>
+
+    <h2>Welcome to the API!</h2>
+
+    <div >
+        <label>Route</label>
+        <input type="text" id="api_route" value="api/">
+        <label>Method</label>
+        <input type="text" id="api_method" value="POST"> 
+        <label>Body</label>
+        <input type="text" id="api_request_body" value="{}">   
+
+        <button onclick="useAPI()">Try it</button>
+
+        <div id="api_response"></div>
+    </div>  
+</div>

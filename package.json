@@ -1,0 +1,25 @@
+{
+  "name": "basic-auth-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/ava tests/**/*.test.js --verbose",
+    "cover": "node_modules/.bin/nyc npm test"
+  },
+  "author": "Michael Mendoza <askmichaelmendoza@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.6",
+    "nodemon": "^2.0.15"
+  },
+  "devDependencies": {
+    "ava": "^4.0.1",
+    "nyc": "^15.1.0"
+  }
+}
