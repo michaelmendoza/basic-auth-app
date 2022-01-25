@@ -23,23 +23,34 @@ const findOne = (req, res) => {
         })
 }
 
+const findOneByUsername = (req, res) => {
+    User.find({ username: req.body.username })
+        .then((data) => {
+            return res.status(201).json({ success: true, message: 'User found.', data });
+        })
+        .catch((err) => {
+            return res.status(400).send({ success: false, error: err, message:'User not found.'});
+        })
+}
+
 const create = async (req, res) => {
     
-    if(!req.body) {
-        return res.status(400).json({ success: false, error: 'Invalid request.' })
-    }
+    if(!req.body) return res.status(400).json({ success: false, error: 'Invalid request.' });
+    
+    // Enforce a unique username for users 
+    const userFound = await User.findOne({username: req.body.username});
+    if(userFound) res.status(400).json({ success: false, error: 'Invalid request. Username already exists.' });
 
+    // Generate password hash and store hash in db
     const saltRounds = 10;
     const hash = await bcrypt.hash(req.body.password, saltRounds);
     const user = new User({ ...req.body, password:hash });
 
-    if(!user) {
-        return res.status(400).json({ success: false, error: err, message: 'Invalid user data.' })
-    }
+    if(!user) return res.status(400).json({ success: false, error: err, message: 'Invalid user data.' });
 
     user.save()
-        .then(() => {
-            return res.status(201).json({ success: true, message: 'User created.', data: { user }  })
+        .then((data) => {
+            return res.status(201).json({ success: true, message: 'User created.', data })
         })
         .catch((err) => {
             return res.status(400).send({ success: false, error: err, message:'User not created.'});
@@ -49,30 +60,55 @@ const create = async (req, res) => {
 const createMock = async (req, res) => {
 
     const mockUser = MockUser.createUser();
+
+    // Enforce a unique username for users 
+    const userFound = await User.findOne({username: mockUser.username});
+    if(userFound) res.status(400).json({ success: false, error: 'Invalid request. Username already exists.' });
+
+    // Generate password hash and store hash in db
     const saltRounds = 10;
     const hash = await bcrypt.hash(mockUser.password, saltRounds);
     const user = new User({ ...mockUser, password:hash });
 
-    if(!user) {
-        return res.status(400).json({ success: false, error: err, message: 'Invalid user data.' })
-    }
+    if(!user) return res.status(400).json({ success: false, error: err, message: 'Invalid user data.' });
 
     user.save()
-        .then(() => {
-            return res.status(201).json({ success: true, message: 'User created.', data: { user }  })
+        .then((data) => {
+            return res.status(201).json({ success: true, message: 'User created.', data })
         })
         .catch((err) => {
             return res.status(400).send({ success: false, error: err, message:'User not created.'});
         })
 }
 
-const update = (req, res) => {
+const update = async (req, res) => {
 
+    if(!req.body) return res.status(400).json({ success: false, error: 'Invalid request.' });
+    
+    const query = { username: req.body.username };
+    const update = { ...req.body };
+
+    if(update.password) {
+        const saltRounds = 10;
+        const hash = await bcrypt.hash(mockUser.password, saltRounds);
+        update.password = hash;
+    }
+
+    User.findOneAndUpdate(query, update)
+        .then((data) => {
+            return res.status(201).json({ success: true, message: 'User updated.', data })
+
+        })
+        .catch(() => {
+            return res.status(400).send({ success: false, error: err, message:'User not updated.'});
+
+        })
 }
 
 module.exports = {
     find,
     findOne,
+    findOneByUsername,
     create,
     update,
     createMock

@@ -2,12 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
-const db = require('./db');
+const { initDB } = require('./db');
 const logger = require('./middleware/logger');
-const auth = require('./middleware/auth');
 
 const app = express()
 var port = process.env.PORT || 3011;
+
+// Initialize db 
+initDB();
 
 // Use Middlewares
 app.use(bodyParser.urlencoded({ extended: true }));
