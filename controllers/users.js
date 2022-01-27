@@ -12,8 +12,8 @@ const find = async (req, res) => {
         })
 }
 
-const findOne = (req, res) => {
-    User.findById(req.body.id)
+const findOne = async (req, res) => {
+    User.find({ ...req.body })
         .then((data) => {
             return res.status(201).json({ success: true, message: 'User found.', data })
         })
@@ -22,8 +22,8 @@ const findOne = (req, res) => {
         })
 }
 
-const findOneByUsername = (req, res) => {
-    User.find({ username: req.body.username })
+const findOneByUsername = async (req, res) => {
+    User.find({ username: req.params.username })
         .then((data) => {
             return res.status(201).json({ success: true, message: 'User found.', data });
         })
