@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const User = require("../models/user");
-const MockUser = require("../mock/users");
 
 const find = async (req, res) => {
     const options = { limit: 10 };   
@@ -57,29 +56,6 @@ const create = async (req, res) => {
         })
 }
 
-const createMock = async (req, res) => {
-
-    const mockUser = MockUser.createUser();
-
-    // Enforce a unique username for users 
-    const userFound = await User.findOne({username: mockUser.username});
-    if(userFound) res.status(400).json({ success: false, error: 'Invalid request. Username already exists.' });
-
-    // Generate password hash and store hash in db
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(mockUser.password, saltRounds);
-    const user = new User({ ...mockUser, password:hash });
-
-    if(!user) return res.status(400).json({ success: false, error: err, message: 'Invalid user data.' });
-
-    user.save()
-        .then((data) => {
-            return res.status(201).json({ success: true, message: 'User created.', data })
-        })
-        .catch((err) => {
-            return res.status(400).send({ success: false, error: err, message:'User not created.'});
-        })
-}
 
 const update = async (req, res) => {
 
@@ -110,6 +86,5 @@ module.exports = {
     findOne,
     findOneByUsername,
     create,
-    update,
-    createMock
+    update
 }

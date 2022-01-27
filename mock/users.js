@@ -16,7 +16,7 @@ const generateName = () => {
     return { firstName, lastName }
 }
 
-const createUser = () => {
+const generateUserData = () => {
     const name = generateName();
 
     return {
@@ -28,8 +28,29 @@ const createUser = () => {
     }
 }
 
-const createTestUser = async () => {
+const createMockUser = async (_user) => {
 
+    const mockUser = _user || generateUserData();
+
+    // Enforce a unique username for users 
+    const userFound = await User.findOne({username: mockUser.username});
+    if(userFound) return;
+
+    // Generate password hash and store hash in db
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(mockUser.password, saltRounds);
+    const user = new User({ ...mockUser, password:hash });
+
+    return user.save()
+        .then((data) => {
+            console.log('User created: ', data._doc);
+        })
+        .catch((err) => {
+            console.log('User not created: ', err );
+        })
+}
+
+const createTestUser = async () => {
     const testUser = {
         username: 'test', 
         firstName: 'John',
@@ -38,23 +59,25 @@ const createTestUser = async () => {
         password: 'test'
     };
 
-    const userFound = await User.findOne({username: testUser.username});
-    if(userFound) return;
+    await createMockUser(testUser);
+}
 
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(testUser.password, saltRounds);
-    const user = new User({ ...testUser, password:hash });
+const createTestAdmin = async () => {
+    const adminUser = {
+        username: 'admin', 
+        firstName: 'Adam',
+        lastName: 'Admin',
+        email: 'test@gmail.com',
+        password: 'admin',
+        role: 'admin'
+    };
 
-    user.save()
-        .then(() => {
-            console.log('Test User created: ', user._doc);
-        })
-        .catch((err) => {
-            console.log('Test User not created: ', err );
-        })
+    await createMockUser(adminUser);
 }
 
 module.exports = {
-    createUser,
-    createTestUser
+    generateUserData,
+    createMockUser,
+    createTestUser,
+    createTestAdmin
 }

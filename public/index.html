@@ -7,8 +7,10 @@
         }
 
         const setJWT = (_jwt) => {
-            console.log('Setting JWT', _jwt);
-            window.localStorage.setItem("jwt", _jwt);
+            if(_jwt) {
+                console.log('Setting JWT', _jwt);
+                window.localStorage.setItem("jwt", _jwt);
+            }
         }
 
         const clearJWT = () => {
