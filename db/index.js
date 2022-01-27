@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const { initMockData } = require('../mock');
 
-const database = 'mock';
+const host = process.env.DB_HOST || 'mongodb://127.0.0.1:27017/';
+const database = process.env.DB_NAME || 'mock';
 
 const initDB = async () => {
     await mongoose
-        .connect('mongodb://127.0.0.1:27017/' + database, { useNewUrlParser: true })
+        .connect(host + database, { useNewUrlParser: true })
         .then(()=> {
             console.log("Connected to " + database + " database.")
         })
