@@ -1,7 +1,6 @@
 # Basic Auth Server
 
-A basic server that support user login/authorization using jsonwebtokens. 
-
+A basic express nodejs server that supports user login/authorization using jsonwebtokens. Intended to be a seed application for furture projects. 
 
 Features:
 
@@ -11,3 +10,6 @@ Features:
 - Supports Routes using express router
 - Supports Middleware for auth, and logger
 - Supports Unit Testing using Jest 
+- Supports login/authorization using jsonwebtokens
+- Supports role based authorization
+- Supports mock data generation
