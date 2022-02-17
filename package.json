@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/ava tests/**/*.test.js --verbose",
-    "cover": "node_modules/.bin/nyc npm test"
+    "start": "node index.js",
+    "test": "jest --verbose --detectOpenHandles",
+    "test:watch": "jest --watch --verbose"
   },
   "author": "Michael Mendoza <askmichaelmendoza@gmail.com>",
   "license": "ISC",
@@ -16,11 +17,12 @@
     "dotenv": "^14.3.2",
     "express": "^4.17.2",
     "jsonwebtoken": "^8.5.1",
+    "mongodb-memory-server": "^8.3.0",
     "mongoose": "^6.1.6",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "supertest": "^6.2.2"
   },
   "devDependencies": {
-    "ava": "^4.0.1",
-    "nyc": "^15.1.0"
+    "jest": "^27.5.1"
   }
 }

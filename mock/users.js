@@ -43,7 +43,7 @@ const createMockUser = async (_user) => {
 
     return user.save()
         .then((data) => {
-            console.log('User created: ', data._doc);
+            //console.log('User created: ', data._doc);
         })
         .catch((err) => {
             console.log('User not created: ', err );

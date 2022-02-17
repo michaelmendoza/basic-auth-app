@@ -4,7 +4,7 @@ const User = require("../models/user");
 const { jwtsecret } = require('../middleware/auth');
 
 const loginWithPassword = async (req, res) => {
-    console.log('login');
+    //console.log('login');
 
     try {
         const user = await User.findOne({ 'username': req.body.username }).exec();

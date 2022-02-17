@@ -4,7 +4,7 @@ const User = require("../models/user");
 const jwtsecret = "make liberty run dynamic stately";
 
 const isAuthorized = async(req, res, next) => {
-    console.log('auth check');
+    //console.log('auth check');
 
     try {
         const token = req.headers['x-access-token'];
@@ -23,7 +23,7 @@ const isAuthorized = async(req, res, next) => {
 }
 
 const isAdmin = async (req, res, next) => {
-    console.log('admin check');
+    //console.log('admin check');
 
     try {
         const token = req.headers['x-access-token'];

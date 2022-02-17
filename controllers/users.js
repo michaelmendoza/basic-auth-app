@@ -13,7 +13,7 @@ const find = async (req, res) => {
 }
 
 const findOne = async (req, res) => {
-    User.find({ ...req.body })
+    User.findOne({ ...req.body })
         .then((data) => {
             return res.status(201).json({ success: true, message: 'User found.', data })
         })
@@ -23,12 +23,15 @@ const findOne = async (req, res) => {
 }
 
 const findOneByUsername = async (req, res) => {
-    User.find({ username: req.params.username })
+    User.findOne({ username: req.params.username })
         .then((data) => {
-            return res.status(201).json({ success: true, message: 'User found.', data });
+            if (data)
+                return res.status(201).json({ success: true, message: 'User found.', data })
+            else
+                return res.status(400).send({ success: false, message:'User not found.', data:[]});
         })
         .catch((err) => {
-            return res.status(400).send({ success: false, error: err, message:'User not found.'});
+            return res.status(500).send({ success: false, error: err, message:'User not found.'});
         })
 }
 
@@ -81,10 +84,28 @@ const update = async (req, res) => {
         })
 }
 
+const deleteOne = async (req, res) => {
+    const user = await User.findOne({ ...req.body })
+    if (user) {
+        try {
+            const data = await User.deleteOne({username: user.username});
+            return res.status(201).json({ success: true, message: 'User delete.', data })
+        }
+        catch (error) {
+            return res.status(500).send({ success: false, error: err, message:'Unable to delete user.'});
+        }
+    }
+    else {
+        return res.status(500).send({ success: false, error: 'Error: User not found', message:'Unable to delete user.'});
+
+    }
+}
+
 module.exports = {
     find,
     findOne,
     findOneByUsername,
     create,
-    update
+    update,
+    deleteOne
 }

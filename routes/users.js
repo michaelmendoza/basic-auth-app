@@ -7,5 +7,6 @@ router.route('/:username').get( UsersController.findOneByUsername );
 router.route('/find/').post( UsersController.findOne );
 router.route('/create').post( UsersController.create );
 router.route('/update').post( UsersController.update );
+router.route('/delete').delete( UsersController.deleteOne );
 
 module.exports = router;

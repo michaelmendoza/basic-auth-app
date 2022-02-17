@@ -1,26 +1,30 @@
 const mongoose = require('mongoose');
 const { initMockData } = require('../mock');
 
-const host = process.env.DB_HOST || 'mongodb://127.0.0.1:27017/';
-const database = process.env.DB_NAME || 'mock';
+let db;
 
-const initDB = async () => {
+const initDB = async (database_name) => {
+    const database = database_name || process.env.DB_NAME || 'mock';
+    const host = process.env.DB_HOST || 'mongodb://127.0.0.1:27017/';
+
     await mongoose
         .connect(host + database, { useNewUrlParser: true })
-        .then(()=> {
-            console.log("Connected to " + database + " database.")
-        })
-        .catch(e => {
-            console.error('Connection error', e.message)
-        })
+        .catch(e => { console.error('Connection error', e.message)})
 
-    const db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'MongoDB connection error:'))
+    mongoose.connection.on('error', console.error.bind(console, 'MongoDB connection error:'))
+    db = mongoose.connection;
+    
+    return mongoose.connection;
+}
 
+const getDB = () => db;
+
+const setupMock = async () => {
     await initMockData();
-    return db;
 }
 
 module.exports = { 
-    initDB 
+    initDB,
+    getDB,
+    setupMock
 }
