@@ -5,7 +5,7 @@ const find = async (req, res) => {
     const options = { limit: 10 };   
     User.find({}, null, options)
         .then((data) => {
-            return res.status(201).json({ success: true, message: 'Users found.', data });
+            return res.status(200).json({ success: true, message: 'Users found.', data });
         })
         .catch((err) => {
             return res.status(400).send({ success: false, error: err, message:'Users not found.'});
@@ -15,7 +15,7 @@ const find = async (req, res) => {
 const findOne = async (req, res) => {
     User.findOne({ ...req.body })
         .then((data) => {
-            return res.status(201).json({ success: true, message: 'User found.', data })
+            return res.status(200).json({ success: true, message: 'User search complete.', data })
         })
         .catch((err) => {
             return res.status(400).send({ success: false, error: err, message:'User not found.'});
@@ -25,13 +25,10 @@ const findOne = async (req, res) => {
 const findOneByUsername = async (req, res) => {
     User.findOne({ username: req.params.username })
         .then((data) => {
-            if (data)
-                return res.status(201).json({ success: true, message: 'User found.', data })
-            else
-                return res.status(400).send({ success: false, message:'User not found.', data:[]});
+            return res.status(200).json({ success: true, message: 'User search complete.', data })
         })
         .catch((err) => {
-            return res.status(500).send({ success: false, error: err, message:'User not found.'});
+            return res.status(400).send({ success: false, error: err, message:'User not found.'});
         })
 }
 
@@ -75,29 +72,21 @@ const update = async (req, res) => {
 
     User.findOneAndUpdate(query, update)
         .then((data) => {
-            return res.status(201).json({ success: true, message: 'User updated.', data })
+            return res.status(200).json({ success: true, message: 'User updated.', data })
 
         })
         .catch(() => {
             return res.status(400).send({ success: false, error: err, message:'User not updated.'});
-
         })
 }
 
-const deleteOne = async (req, res) => {
-    const user = await User.findOne({ ...req.body })
-    if (user) {
-        try {
-            const data = await User.deleteOne({username: user.username});
-            return res.status(201).json({ success: true, message: 'User delete.', data })
-        }
-        catch (error) {
-            return res.status(500).send({ success: false, error: err, message:'Unable to delete user.'});
-        }
+const deleteOneByUsername = async (req, res) => {
+    try {
+        const data = await User.findOneAndDelete({ username:req.body.username });
+        return res.status(200).json({ success: true, message: 'User deleted.', data })
     }
-    else {
-        return res.status(500).send({ success: false, error: 'Error: User not found', message:'Unable to delete user.'});
-
+    catch (error) {
+        return res.status(400).send({ success: false, error: 'Error: User not found', message:'Unable to delete user.'});
     }
 }
 
@@ -107,5 +96,5 @@ module.exports = {
     findOneByUsername,
     create,
     update,
-    deleteOne
+    deleteOne: deleteOneByUsername
 }

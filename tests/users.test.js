@@ -9,7 +9,7 @@ beforeAll(async () => {
     await db.initDB('test-users');
     await createTestUser();
     await createTestAdmin();
-    
+
     const logRes = await supertest(app)
         .post("/login")
         .send({username: 'test', password: 'test'})
@@ -26,7 +26,7 @@ describe('GET /user/', () => {
             .get("/users")
             .set('x-access-token', token)
 
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(200);
         expect(res.body.data.length).toBe(2);
     })
 });
@@ -37,7 +37,7 @@ describe('GET /user/:username', () => {
             .get("/users/test")
             .set('x-access-token', token)
     
-        expect(res.status).toBe(201);
+        expect(res.status).toBe(200);
         expect(res.body.data.username).toBe('test');
     })
     
@@ -45,8 +45,8 @@ describe('GET /user/:username', () => {
         const res = await supertest(app)
             .get("/users/nottest")
             .set('x-access-token', token)
-    
-        expect(res.status).toBe(400);
+        
+        expect(res.body.data).toBeFalsy()
     })
 })
 
@@ -80,7 +80,7 @@ describe('DELETE  /user/', () => {
             .get("/users/test2")
             .set('x-access-token', token)
 
-        expect(resDelete.status).toBe(201);
-        expect(resCheck.status).toBe(400);
+        expect(resDelete.status).toBe(200);
+        expect(resCheck.body.data).toBeFalsy()
     })
 });
