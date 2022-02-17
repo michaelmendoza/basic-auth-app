@@ -6,7 +6,7 @@ const { createTestUser, createTestAdmin } = require("../mock/users");
 
 let token;
 beforeAll(async () => {
-    await db.initDB('test');
+    await db.initDB('test-mock');
     await createTestUser();
     await createTestAdmin();
 
@@ -16,8 +16,8 @@ beforeAll(async () => {
         token = logRes.header['x-access-token'];
 });
 afterAll(async () => { 
-    await User.deleteMany(); 
-    db.getDB().close()
+    await User.collection.drop();
+    db.getDB().close();
 });
 
 describe('POST /mock/create_user', () => {

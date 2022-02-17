@@ -6,13 +6,13 @@ const { createTestUser, createTestAdmin } = require("../mock/users");
 
 let token;
 beforeAll(async () => {
-    await db.initDB();
+    await db.initDB('test-login');
     await createTestUser();
     await createTestAdmin();
 });
 afterAll(async () => { 
-    await User.deleteMany(); 
-    db.getDB().close()
+    await User.collection.drop();
+    db.getDB().close();
 });
 
 describe('Login', () => {

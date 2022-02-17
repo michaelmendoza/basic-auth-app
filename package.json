@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest --verbose --detectOpenHandles",
-    "test:watch": "jest --watch --verbose"
+    "test:watch": "jest --watch --verbose",
+    "test:coverage": "jest --coverage --verbose"
   },
   "author": "Michael Mendoza <askmichaelmendoza@gmail.com>",
   "license": "ISC",
