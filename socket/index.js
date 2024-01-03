@@ -15,10 +15,11 @@ const createSocket = (server) => {
     io.on('connection', (_socket) => {
         console.log('a user connected');
 
-        _socket.on('messages:get', ({ reciever }) => {
-            const messages = findByReciever(reciever);
-            console.log(messages);
-            io.emit(reciever, messages);
+        _socket.on('messages:get', async ({ username }) => {
+            const messages = await findByReciever(username);
+            const json = JSON.stringify(messages);
+            console.log(json);
+            io.emit(username, json);
         })
     });
 
