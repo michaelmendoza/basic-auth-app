@@ -7,6 +7,9 @@ const initMockData = async () => {
     const test2 = await createTestUserTwo();
     const admin = await createTestAdmin();
     await createMockMessage({ sender: test, receiver: test2 });
+    await createMockMessage({ sender: test, receiver: test2 });
+    await createMockMessage({ sender: test, receiver: test2 });
+    await createMockMessage({ sender: test, receiver: test2 });
     console.log('Initialization complete.')
 }
 

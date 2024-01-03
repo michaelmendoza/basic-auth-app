@@ -14,6 +14,12 @@ const createSocket = (server) => {
 
     io.on('connection', (_socket) => {
         console.log('a user connected');
+
+        _socket.on('messages:get', ({ reciever }) => {
+            const messages = findByReciever(reciever);
+            console.log(messages);
+            io.emit(reciever, messages);
+        })
     });
 
     socket = io;
