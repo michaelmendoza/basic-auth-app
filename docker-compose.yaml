@@ -2,6 +2,6 @@ version: '3.7'
 services:
   mongodb_container:
     image: mongo:latest
-    container_name: 'test-mongod'
+    container_name: 'hottake-mongod'
     ports:
       - 27017:27017

@@ -17,10 +17,13 @@ const createSocket = (server) => {
 
         _socket.on('messages:get', async ({ username }) => {
             const messages = await findByReciever(username);
-            const json = JSON.stringify(messages);
-            console.log(json);
-            io.emit(username, json);
+            console.log(`Socket: Sending ${messages.length} images to user:${username}`)
+            _socket.emit(username, messages);
         })
+    });
+
+    io.on('error', function (err) {
+        console.log(err);
     });
 
     socket = io;
