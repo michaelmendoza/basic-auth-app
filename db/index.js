@@ -23,8 +23,17 @@ const setupMock = async () => {
     await initMockData();
 }
 
+const dropAllCollections = async () => {
+    const collections = await db.db.listCollections().toArray();
+
+    for(var i = 0; i < collections.length; i++) {
+        await db.db.dropCollection(collections[i].name);
+    }
+}
+
 module.exports = { 
     initDB,
     getDB,
-    setupMock
+    setupMock,
+    dropAllCollections
 }

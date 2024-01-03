@@ -26,11 +26,6 @@ const loginWithPassword = async (req, res) => {
     }
 }
 
-const loginWithSignature = async (req, res) => {
-
-}
-
 module.exports = {
-    loginWithPassword,
-    loginWithSignature
+    loginWithPassword
 }

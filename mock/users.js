@@ -30,36 +30,47 @@ const generateUserData = () => {
 
 const createMockUser = async (_user) => {
 
-    const mockUser = _user || generateUserData();
+    try {
+        const mockUser = _user || generateUserData();
 
-    // Enforce a unique username for users 
-    const userFound = await User.findOne({username: mockUser.username});
-    if(userFound) return;
-
-    // Generate password hash and store hash in db
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(mockUser.password, saltRounds);
-    const user = new User({ ...mockUser, password:hash });
-
-    return user.save()
-        .then((data) => {
-            //console.log('User created: ', data._doc);
-        })
-        .catch((err) => {
-            console.log('User not created: ', err );
-        })
+        // Enforce a unique username for users 
+        const userFound = await User.findOne({username: mockUser.username});
+        if(userFound) return;
+    
+        // Generate password hash and store hash in db
+        const saltRounds = 10;
+        const hash = await bcrypt.hash(mockUser.password, saltRounds);
+        const user = new User({ ...mockUser, password:hash });
+        await user.save();
+        return user;
+    }
+    catch(error) {
+        console.log('User not created: ', err );
+    }
 }
 
 const createTestUser = async () => {
     const testUser = {
-        username: 'test', 
+        username: 'johndoe', 
         firstName: 'John',
         lastName: 'Doe',
-        email: 'test@gmail.com',
+        email: 'johndoe@gmail.com',
         password: 'test'
     };
 
-    await createMockUser(testUser);
+    return await createMockUser(testUser);
+}
+
+const createTestUserTwo = async () => {
+    const testUser = {
+        username: 'janedoe', 
+        firstName: 'Jane',
+        lastName: 'Doe',
+        email: 'janedoe@gmail.com',
+        password: 'test'
+    };
+
+    return await createMockUser(testUser);
 }
 
 const createTestAdmin = async () => {
@@ -67,17 +78,18 @@ const createTestAdmin = async () => {
         username: 'admin', 
         firstName: 'Adam',
         lastName: 'Admin',
-        email: 'test@gmail.com',
+        email: 'admin@gmail.com',
         password: 'admin',
         role: 'admin'
     };
 
-    await createMockUser(adminUser);
+    return await createMockUser(adminUser);
 }
 
 module.exports = {
     generateUserData,
     createMockUser,
     createTestUser,
+    createTestUserTwo,
     createTestAdmin
 }

@@ -23,13 +23,13 @@ const findOne = async (req, res) => {
 }
 
 const findOneByUsername = async (req, res) => {
-    User.findOne({ username: req.params.username })
-        .then((data) => {
-            return res.status(200).json({ success: true, message: 'User search complete.', data })
-        })
-        .catch((err) => {
-            return res.status(400).send({ success: false, error: err, message:'User not found.'});
-        })
+    try {
+        const user = User.findOne({ username: req.params.username }).exec();
+        return res.status(200).json({ success: true, message: 'User search complete.', user })
+    }
+    catch(err) {
+        return res.status(400).send({ success: false, error: err, message:'User not found.'});
+    }
 }
 
 const create = async (req, res) => {
