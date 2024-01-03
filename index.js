@@ -15,7 +15,7 @@ const setupDB = async (app) => {
 }
 
 // Create express app and listen to port
-const app = createApp({ useLogger: false })
+const app = createApp({ useLogger: true })
 const server = http.createServer(app);
 setupDB(app);
 createSocket(server);
