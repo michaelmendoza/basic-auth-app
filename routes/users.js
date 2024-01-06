@@ -1,12 +1,12 @@
 const UsersController = require('../controllers/users');
-const { isAdmin } = require('../middleware/auth');
+const { isAuthorized, isAdmin } = require('../middleware/auth');
 
 const router = require('express').Router();
-router.route('/').get( UsersController.find );
-router.route('/:username').get( UsersController.findOneByUsername );
-router.route('/find/').post( UsersController.findOne );
+router.route('/').get( isAuthorized, UsersController.find );
+router.route('/:username').get( isAuthorized, UsersController.findOneByUsername );
+router.route('/find/').post( isAuthorized, UsersController.findOne );
 router.route('/create').post( UsersController.create );
-router.route('/update').post( UsersController.update );
-router.route('/delete').delete( UsersController.deleteOne );
+router.route('/update').post( isAuthorized, UsersController.update );
+router.route('/delete').delete( isAdmin, UsersController.deleteOne );
 
 module.exports = router;

@@ -34,25 +34,25 @@ const findOneByUsername = async (req, res) => {
 
 const create = async (req, res) => {
     
-    if(!req.body) return res.status(400).json({ success: false, error: 'Invalid request.' });
+    if(!req.body) return res.status(400).json({ success: false, message: 'Error: Invalid request.' });
     
     // Enforce a unique username for users 
     const userFound = await User.findOne({username: req.body.username});
-    if(userFound) res.status(400).json({ success: false, error: 'Invalid request. Username already exists.' });
+    if(userFound) return res.status(400).json({ success: false, message: 'Error: Username already exists.' });
 
     // Generate password hash and store hash in db
     const saltRounds = 10;
     const hash = await bcrypt.hash(req.body.password, saltRounds);
     const user = new User({ ...req.body, password:hash });
 
-    if(!user) return res.status(400).json({ success: false, error: err, message: 'Invalid user data.' });
+    if(!user) return res.status(400).json({ success: false, message: 'Error: Invalid user data.' });
 
     user.save()
         .then((data) => {
-            return res.status(201).json({ success: true, message: 'User created.', data })
+            return res.status(201).json({ success: true, message: 'Success: User created.', data })
         })
         .catch((err) => {
-            return res.status(400).send({ success: false, error: err, message:'User not created.'});
+            return res.status(400).send({ success: false, error: err, message:'Error: User not created.'});
         })
 }
 
