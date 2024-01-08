@@ -17,14 +17,14 @@ const createSocket = (server) => {
 
         _socket.on('messages:get', async ({ username }) => {
             const messages = await Messages.findByReciever(username);
-            console.log(`Socket: Sending ${messages.length} images to user:${username}`)
-            _socket.emit(username, messages);
+            console.log(`Socket: ${username}:messages - Sending ${messages.length} messages`)
+            _socket.emit(`${username}:messages`, messages);
         })
 
         _socket.on('messages:create', async ({ sender, receiver, data }) => {
             const message = await Messages.create({ sender, receiver, data });
-            console.log(`Socket: Creating message from ${sender} to:${receiver}`)
-            _socket.emit(receiver, message)
+            console.log(`Socket: ${receiver}:message - Sending new message`)
+            _socket.emit(`${receiver}:message`, message)
         })
     });
 
