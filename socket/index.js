@@ -1,5 +1,5 @@
 const { Server } = require("socket.io");
-const { findByReciever } = require("../db/messages");
+const Messages = require("../db/messages");
 
 let socket;
 
@@ -16,9 +16,15 @@ const createSocket = (server) => {
         console.log('a user connected');
 
         _socket.on('messages:get', async ({ username }) => {
-            const messages = await findByReciever(username);
+            const messages = await Messages.findByReciever(username);
             console.log(`Socket: Sending ${messages.length} images to user:${username}`)
             _socket.emit(username, messages);
+        })
+
+        _socket.on('messages:create', async ({ sender, receiver, data }) => {
+            const message = await Messages.create({ sender, receiver, data });
+            console.log(`Socket: Creating message from ${sender} to:${receiver}`)
+            _socket.emit(receiver, message)
         })
     });
 
